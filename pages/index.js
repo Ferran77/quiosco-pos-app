@@ -12,7 +12,7 @@ export default function Home() {
       <h1 className='text-3xl font-black mt-1'>
         {categoriaActual?.nombre}
       </h1>
-      <p className='text-2xl my-5'>
+      <p className='text-lg md:text-2xl my-5'>
         Elige y personaliza tu pedido aquí:
       </p>
 

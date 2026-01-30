@@ -8,7 +8,7 @@ const Categoria = ({ categoria }) => {
   const { nombre, icono, id } = categoria;
 
   return (
-    <div className={`${categoriaActual?.id === id ? 'bg-amber-400' : ''} flex items-center gap-2 w-full border p-5 hover:bg-amber-400`}>
+    <div className={`${categoriaActual?.id === id ? 'bg-amber-400' : ''} flex items-center gap-2 w-[calc(100%-16px)] md:w-full border p-5 hover:bg-amber-400 rounded-lg ml-2 md:ml-0`}>
       <Image
         width={40}
         height={40}
@@ -17,7 +17,7 @@ const Categoria = ({ categoria }) => {
       />
       <button
         type="button"
-        className="text-2xl font-bold hover:cursor-pointer"
+        className="text-xl md:text-lg lg:text-2xl font-bold hover:cursor-pointer"
         onClick={() => handleClickCategoria(id)}
       >
         {nombre}

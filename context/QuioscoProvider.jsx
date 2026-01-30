@@ -44,7 +44,10 @@ const QuioscoProvider = ({ children }) => {
   const handleClickCategoria = (id) => {
     const categoria = categorias.filter((cat) => cat.id === id);
     setCategoriaActual(categoria[0]);
-    router.push("/");
+    // Solo redirigir a "/" si no estamos en la página de admin
+    if (router.pathname !== "/admin") {
+      router.push("/");
+    }
   };
 
   const handleSetProducto = (producto) => {

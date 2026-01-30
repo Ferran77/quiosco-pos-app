@@ -32,12 +32,12 @@ export default function Layout({children, pagina}) {
       </Head>
 
       <div className="md:flex">
-        <aside className="md:w-4/12 xl:w-1/4 2xl:w-1/5">
+        <aside className="md:w-[calc(33.33%-16px)] xl:w-[calc(25%-16px)] 2xl:w-[calc(20%-16px)]">
           <Sidebar />
         </aside>
 
-        <main className="md:w-8/12 xl:w-3/4 2xl:w-4/5 h-screen overflow-y-scroll">
-          <div className="p-10">
+        <main className="md:w-[calc(66.67%+24px)] xl:w-[calc(75%+24px)] 2xl:w-[calc(80%+24px)] h-screen overflow-y-scroll">
+          <div className="p-4 md:p-10">
             <Pasos/>
           {children}
           </div>

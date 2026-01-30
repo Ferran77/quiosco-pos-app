@@ -1,0 +1,26 @@
+-- CreateTable
+CREATE TABLE "Producto" (
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "nombre" TEXT NOT NULL,
+    "precio" REAL NOT NULL,
+    "imagen" TEXT NOT NULL,
+    "categoriaId" INTEGER NOT NULL,
+    CONSTRAINT "Producto_categoriaId_fkey" FOREIGN KEY ("categoriaId") REFERENCES "Categoria" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
+);
+
+-- CreateTable
+CREATE TABLE "Categoria" (
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "nombre" TEXT NOT NULL,
+    "icono" TEXT NOT NULL
+);
+
+-- CreateTable
+CREATE TABLE "Orden" (
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "nombre" TEXT NOT NULL,
+    "fecha" TEXT NOT NULL,
+    "total" REAL NOT NULL,
+    "pedido" TEXT NOT NULL,
+    "estado" BOOLEAN NOT NULL DEFAULT false
+);

@@ -6,16 +6,30 @@ const prisma = new PrismaClient();
 
 const main = async () : Promise<void> => {
   try {
-    await prisma.categoria.createMany({
-      data: categorias
-    })
+    // Limpiar datos existentes (opcional, para desarrollo)
+    await prisma.producto.deleteMany();
+    await prisma.categoria.deleteMany();
 
-    await prisma.producto.createMany({
-      data: productos
-    })
+    // Crear categorías usando transacción
+    for (const categoria of categorias) {
+      await prisma.categoria.create({
+        data: categoria
+      });
+    }
 
-  } catch  (error){
-    console.log(error)
+    // Crear productos usando transacción
+    for (const producto of productos) {
+      await prisma.producto.create({
+        data: producto
+      });
+    }
+
+    console.log("✅ Base de datos poblada correctamente con datos fake");
+  } catch (error) {
+    console.error("❌ Error al poblar la base de datos:", error);
+    process.exit(1);
+  } finally {
+    await prisma.$disconnect();
   }
 }
 
