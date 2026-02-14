@@ -87,3 +87,10 @@ Si en Table Editor ves que las tablas tienen **"This table can be accessed by an
 2. Copia y ejecuta el contenido de **`prisma/supabase-enable-rls.sql`** (Run).
 
 Con eso se activa **Row Level Security** en las tablas. La Data API (anon) dejará de poder acceder; tu app sigue funcionando porque usa la conexión directa con `DATABASE_URL` (Prisma), no la Data API.
+
+---
+
+## 6. DATABASE_URL en Vercel (formato)
+
+- **Nombre:** exactamente `DATABASE_URL`.
+- **Valor:** URL de Supabase. Puedes usar conexión directa (puerto 5432) o pooler (6543). Si la contraseña tiene símbolos (`@`, `#`, `%`, etc.), codifícala en la URL. Después de guardar, haz **Redeploy**.

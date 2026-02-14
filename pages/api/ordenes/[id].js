@@ -1,8 +1,6 @@
-import { PrismaClient } from "@prisma/client";
+import prisma from "../../lib/prisma";
 
 export default async function handler(req, res) {
-  const prisma = new PrismaClient();
-
   try {
     if(req.method === 'POST') {
       const {id} = req.query
@@ -26,12 +24,9 @@ export default async function handler(req, res) {
     }
   } catch (error) {
     console.error("Error en /api/ordenes/[id]:", error);
-    res.status(500).json({ 
+    res.status(500).json({
       error: "Error al actualizar la orden",
       message: error.message,
-      details: process.env.NODE_ENV === 'development' ? error.stack : undefined
     });
-  } finally {
-    await prisma.$disconnect();
   }
 }
