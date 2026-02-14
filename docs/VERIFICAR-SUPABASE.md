@@ -90,7 +90,20 @@ Con eso se activa **Row Level Security** en las tablas. La Data API (anon) dejar
 
 ---
 
-## 6. DATABASE_URL en Vercel (formato)
+## 6. DATABASE_URL en Vercel
 
-- **Nombre:** exactamente `DATABASE_URL`.
-- **Valor:** URL de Supabase. Puedes usar conexión directa (puerto 5432) o pooler (6543). Si la contraseña tiene símbolos (`@`, `#`, `%`, etc.), codifícala en la URL. Después de guardar, haz **Redeploy**.
+**Si Supabase muestra "Not IPv4 compatible" en Direct connection:** no uses Direct. Usa **Session Pooler** (compatible con IPv4, recomendado para Vercel).
+
+**Pasos:**
+
+1. Supabase → **Project Settings** → **Database** → **Connection string** → **URI**.
+2. Elige **Session** (Session Pooler), no "Direct" ni "Transaction".
+3. Copia la URL. Suele ser del estilo:  
+   `postgresql://postgres.[REF]:[PASSWORD]@aws-0-[REGION].pooler.supabase.com:5432/postgres`
+4. **Añade al final** (para evitar "Circuit breaker open" con Prisma):  
+   `?pgbouncer=true&connection_limit=1`  
+   Ejemplo completo:  
+   `...postgres?pgbouncer=true&connection_limit=1`
+5. En Vercel → **Settings** → **Environment Variables** → `DATABASE_URL` = esa URL. Guarda y haz **Redeploy**.
+
+**Resumen:** Session Pooler (no Direct) + `?pgbouncer=true&connection_limit=1` en la URL.

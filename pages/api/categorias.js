@@ -13,10 +13,12 @@ export default async function handler(req, res) {
     res.status(200).json(categorias);
   } catch (error) {
     console.error("Error en /api/categorias:", error);
-    const message =
-      error.code === "P1001"
-        ? "No se puede conectar a la base de datos. Revisa DATABASE_URL en Vercel (usa la URL de Supabase con puerto 6543 o 5432 y, si la contraseña tiene símbolos, codifícala en la URL)."
-        : error.message;
+    const isConnectionError =
+      error.code === "P1001" ||
+      (error.message && error.message.includes("Circuit breaker"));
+    const message = isConnectionError
+      ? "Error de conexión a la base de datos. En Vercel usa la URL directa de Supabase (puerto 5432) o, si usas pooler (6543), añade al final: ?pgbouncer=true&connection_limit=1"
+      : error.message;
     res.status(500).json({
       error: "Error al obtener categorías",
       message,
