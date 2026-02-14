@@ -6,9 +6,21 @@ const prisma = new PrismaClient();
 
 const main = async () : Promise<void> => {
   try {
-    // Limpiar datos existentes (opcional, para desarrollo)
-    await prisma.producto.deleteMany();
-    await prisma.categoria.deleteMany();
+    // Limpiar datos existentes (opcional); si las tablas no existen, no hacer nada
+    try {
+      await prisma.producto.deleteMany();
+      await prisma.categoria.deleteMany();
+    } catch (e: unknown) {
+      const err = e as { code?: string };
+      if (err?.code === "P2021") {
+        console.error("❌ Las tablas no existen. Crea las tablas primero:");
+        console.error("   1. En Supabase → SQL Editor → New query");
+        console.error("   2. Copia el contenido de prisma/supabase-create-tables.sql y ejecútalo (Run)");
+        console.error("   O ejecuta: npx prisma db push");
+        process.exit(1);
+      }
+      throw e;
+    }
 
     // Crear categorías usando transacción
     for (const categoria of categorias) {

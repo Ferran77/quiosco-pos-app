@@ -23,9 +23,12 @@ export default function Home() {
       <Layout pagina="Menú">
         <div className="flex flex-col items-center justify-center py-20 px-4">
           <p className="text-xl text-red-600 text-center mb-4">
-            No se pudo cargar el menú. En producción (Vercel) necesitas una base de datos alojada.
+            No se pudo cargar el menú.
           </p>
-          <p className="text-slate-600 text-center mb-6">{categoriasError}</p>
+          <p className="text-slate-600 text-center mb-2 max-w-md">
+            En Vercel: revisa que en el proyecto tengas la variable <strong>DATABASE_URL</strong> (Settings → Environment Variables) con la URL de Supabase (Connection pooling, puerto 6543). Luego haz Redeploy.
+          </p>
+          <p className="text-slate-500 text-sm text-center mb-6">{categoriasError}</p>
           <button
             type="button"
             onClick={reintentarCategorias}

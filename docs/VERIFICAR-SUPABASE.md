@@ -76,3 +76,14 @@ Si todo está bien, verás cuántas categorías y productos hay. Si hay 0 catego
 | No existen las tablas| `npx prisma db push` y luego `npx prisma db seed` |
 | Tablas vacías        | `npx prisma db seed`                           |
 | Sigue "undefined"    | 1) Ejecutar `npx ts-node prisma/verificar-datos.ts` en tu PC (con .env a Supabase). 2) Si hay 0 categorías, hacer seed. 3) Comprobar que en Vercel la variable `DATABASE_URL` sea la misma URL de Supabase y volver a desplegar. |
+
+---
+
+## 5. Quitar el warning "RLS is disabled"
+
+Si en Table Editor ves que las tablas tienen **"This table can be accessed by anyone via the Data API as RLS is disabled"**:
+
+1. En Supabase abre **SQL Editor** → **New query**.
+2. Copia y ejecuta el contenido de **`prisma/supabase-enable-rls.sql`** (Run).
+
+Con eso se activa **Row Level Security** en las tablas. La Data API (anon) dejará de poder acceder; tu app sigue funcionando porque usa la conexión directa con `DATABASE_URL` (Prisma), no la Data API.
