@@ -21,19 +21,23 @@ Si **las tablas existen pero están vacías** (sobre todo **Categoria**), hay qu
 
 Desde tu máquina, con el `.env` apuntando a Supabase (`DATABASE_URL` = URL de tu proyecto Supabase).
 
-**Recomendado** (crea las tablas sin usar migraciones antiguas de SQLite):
+**Importante:** Para `db push` y `db seed` usa en `.env` la **conexión directa** (puerto **5432**), no la del pooler (6543). En Supabase: **Project Settings → Database → Connection string → URI** (la que dice "Direct connection" o usa el puerto 5432).
+
+**Opción A – Con Prisma (recomendado):**
 
 ```bash
 npx prisma db push
-```
-
-Eso crea o actualiza las tablas en Supabase según tu `schema.prisma` actual (PostgreSQL).
-
-Luego genera el cliente por si acaso:
-
-```bash
 npx prisma generate
 ```
+
+Si ves un error de conexión, revisa que la URL no tenga `?pgbouncer=true` y que el puerto sea 5432 para estas órdenes.
+
+**Opción B – A mano en Supabase (si db push no crea tablas):**
+
+1. En Supabase abre **SQL Editor** → **New query**.
+2. Copia todo el contenido del archivo `prisma/supabase-create-tables.sql` del proyecto.
+3. Pégalo en el editor y pulsa **Run**.
+4. Verifica en **Table Editor** que existan las tablas **Categoria**, **Producto** y **Orden**.
 
 ---
 
