@@ -31,4 +31,34 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
+**Importante:** En local el proyecto usa SQLite. En Vercel (serverless) **SQLite no funciona** porque no hay sistema de archivos persistente. Si solo ves la barra, el logo y el botón Admin tras el deploy, es porque la API de categorías falla al no poder usar la base de datos.
+
+### Solución: usar una base de datos alojada en producción
+
+#### Opción 1 – Supabase (PostgreSQL, plan gratis)
+
+1. Crea una cuenta en [Supabase](https://supabase.com) y un nuevo proyecto.
+2. En el proyecto: **Project Settings** → **Database**. Copia la **Connection string** en modo **URI**.
+   - Para Vercel (serverless) usa la que incluye **connection pooling** (puerto **6543**, "Transaction" mode). Suele verse como `postgresql://postgres.[ref]:[password]@aws-0-[region].pooler.supabase.com:6543/postgres`.
+3. En tu proyecto en **Vercel** → **Settings** → **Environment Variables** añade `DATABASE_URL` con esa URL. Añade `?pgbouncer=true` al final si Supabase lo indica para el pooler.
+4. En este repo, en `prisma/schema.prisma` cambia el datasource a PostgreSQL:
+   - `provider = "postgresql"`
+   - `url      = env("DATABASE_URL")`
+5. Crea y aplica migraciones contra Supabase (desde tu máquina con `DATABASE_URL` apuntando a Supabase):
+   ```bash
+   npx prisma migrate dev --name supabase
+   npx prisma db seed
+   ```
+6. Vuelve a desplegar en Vercel.
+
+Para desarrollo local puedes usar la misma base de datos de Supabase en tu `.env` (misma `DATABASE_URL`) o seguir usando SQLite en local y tener dos archivos de schema si lo prefieres (más avanzado).
+
+#### Opción 2 – Neon (PostgreSQL, plan gratis)
+
+- Crea un proyecto en [Neon](https://neon.tech), copia la connection string y en Vercel define `DATABASE_URL`. En `prisma/schema.prisma` usa `provider = "postgresql"` y `url = env("DATABASE_URL")`. Luego migraciones y seed como arriba.
+
+#### Otras opciones
+
+PlanetScale (MySQL), Vercel Postgres, etc. En todos los casos: definir `DATABASE_URL` en Vercel y que el `provider` en `schema.prisma` coincida con la base elegida. Después, ejecutar migraciones y seed contra esa base y volver a desplegar.
+
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.

@@ -13,12 +13,23 @@ const QuioscoProvider = ({ children }) => {
   const [pedido, setPedido] = useState([]);
   const [nombre, setNombre] = useState("");
   const [total, setTotal] = useState(0);
+  const [categoriasError, setCategoriasError] = useState(null);
+  const [categoriasCargando, setCategoriasCargando] = useState(true);
 
   const router = useRouter();
 
   const obtenerCategorias = async () => {
-    const { data } = await axios("/api/categorias");
-    setCategorias(data);
+    setCategoriasCargando(true);
+    setCategoriasError(null);
+    try {
+      const { data } = await axios("/api/categorias");
+      setCategorias(data);
+    } catch (err) {
+      setCategoriasError(err.response?.data?.message || err.message || "Error al cargar el menú");
+      setCategorias([]);
+    } finally {
+      setCategoriasCargando(false);
+    }
   };
 
   //Renderizar todas las categorías
@@ -38,7 +49,7 @@ const QuioscoProvider = ({ children }) => {
   //Selecionar categoría por default,
   //al inicio de la carga
   useEffect(() => {
-    setCategoriaActual(categorias[0]);
+    setCategoriaActual(categorias[0] ?? {});
   }, [categorias]);
 
   const handleClickCategoria = (id) => {
@@ -120,6 +131,9 @@ const QuioscoProvider = ({ children }) => {
       value={{
         categorias,
         categoriaActual,
+        categoriasError,
+        categoriasCargando,
+        reintentarCategorias: obtenerCategorias,
         handleClickCategoria,
         producto,
         handleSetProducto,
