@@ -10,6 +10,13 @@ const main = async () : Promise<void> => {
     try {
       await prisma.producto.deleteMany();
       await prisma.categoria.deleteMany();
+      // Reiniciar secuencias para que los nuevos IDs sean 1, 2, 3... (evita error de FK)
+      await prisma.$executeRawUnsafe(
+        'ALTER SEQUENCE "Categoria_id_seq" RESTART WITH 1;'
+      );
+      await prisma.$executeRawUnsafe(
+        'ALTER SEQUENCE "Producto_id_seq" RESTART WITH 1;'
+      );
     } catch (e: unknown) {
       const err = e as { code?: string };
       if (err?.code === "P2021") {
@@ -22,7 +29,7 @@ const main = async () : Promise<void> => {
       throw e;
     }
 
-    // Crear categorías usando transacción
+    // Crear categorías
     for (const categoria of categorias) {
       await prisma.categoria.create({
         data: categoria
